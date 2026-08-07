@@ -2281,12 +2281,13 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   border: 1.5px solid var(--border);
   border-radius: 22px;
   padding: 9px 16px;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px empêche le zoom automatique iOS Safari */
   font-family: 'Inter', sans-serif;
   color: var(--navy);
   outline: none;
   background: #f7f8fb;
   transition: border-color .2s;
+  transform-origin: left center;
 }
 #ch-input:focus { border-color: var(--navy); }
 #ch-input::placeholder { color: var(--light); }
