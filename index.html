@@ -317,6 +317,16 @@ nav {
   line-height: 1.7;
 }
 
+.btn-step {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-step:hover { opacity: 0.7; }
+
 /* SERVICES */
 .services { background: var(--white); border-bottom: 1px solid var(--border); }
 
@@ -870,6 +880,7 @@ footer {
         <div class="step-num-block">1</div>
         <h3>Vous demandez un devis</h3>
         <p>Remplissez le formulaire en 2 minutes. On vous rappelle sous 24h avec un tarif précis, sans surprise.</p>
+        <a href="#contact" class="btn-step" style="margin-top:16px;display:inline-block;">Demander un devis &rarr;</a>
       </div>
 
       <div class="step">
@@ -954,7 +965,7 @@ footer {
           <li>Nettoyage des vitres inclus</li>
           <li>Planification fixe</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-outline">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Essentiel — 150€/mois')">Choisir ce forfait</a>
       </div>
       <div class="plan featured">
         <div class="plan-badge">Populaire</div>
@@ -968,7 +979,7 @@ footer {
           <li>Priorité de planning</li>
           <li>Rappel automatique</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-gold">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-gold" onclick="choisirForfait('Confort — 220€/mois')">Choisir ce forfait</a>
       </div>
       <div class="plan">
         <div class="plan-name">Prestige</div>
@@ -981,7 +992,7 @@ footer {
           <li>Garantie intervention sous 24h</li>
           <li>Interlocuteur dédié</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-outline">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Prestige — 320€/mois')">Choisir ce forfait</a>
       </div>
     </div>
   </div>
@@ -1019,7 +1030,7 @@ footer {
           <h3>Vous gérez un parc locatif ?</h3>
           <p>Nous établissons une convention partenaire avec tarif dégressif selon le volume et garantie de réactivité 48h. Trois agences partenaires déjà en cours de discussion sur Nancy.</p>
         </div>
-        <a href="#contact" class="btn-cta">Nous contacter</a>
+        <a href="#contact" class="btn-cta" onclick="preSelectProfil('Une agence immobilière')">Nous contacter</a>
       </div>
     </div>
   </div>
@@ -1077,50 +1088,56 @@ footer {
       <span class="section-num" style="display:block;margin-bottom:12px;">Contact</span>
       <h2 class="section-title" style="max-width:100%;text-align:center;margin:0 auto 16px;">Demandez un devis.</h2>
       <p class="contact-sub">Réponse sous 24h. Devis gratuit et sans engagement.</p>
-      <div class="form" id="form">
+      <form class="form" id="form" onsubmit="sendForm(event)">
+        <input type="hidden" name="_subject" value="Nouveau devis — Cohesif Net">
+        <input type="hidden" name="site" value="Cohesif Net">
+        <input type="hidden" name="forfait" id="forfait-hidden" value="">
+        <div id="forfait-banner" style="display:none;background:#f0f4f7;border-radius:8px;padding:12px 16px;font-size:13px;font-weight:600;color:var(--navy);">
+          Forfait sélectionné : <span id="forfait-label"></span>
+        </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Prénom & Nom</label>
-            <input type="text" placeholder="Marie Martin">
+            <label for="nom">Prénom & Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Marie Martin" required>
           </div>
           <div class="form-group">
-            <label>Téléphone</label>
-            <input type="tel" placeholder="+33 6 00 00 00 00">
+            <label for="tel">Téléphone</label>
+            <input type="tel" id="tel" name="telephone" placeholder="+33 6 00 00 00 00">
           </div>
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="marie@exemple.fr">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="marie@exemple.fr" required>
         </div>
         <div class="form-group">
-          <label>Je suis</label>
-          <select>
+          <label for="profil">Je suis</label>
+          <select id="profil" name="profil" required>
             <option value="">Sélectionner...</option>
-            <option>Un particulier</option>
-            <option>Une agence immobilière</option>
-            <option>Un professionnel (cabinet, restaurant, bureau...)</option>
+            <option value="Un particulier">Un particulier</option>
+            <option value="Une agence immobilière">Une agence immobilière</option>
+            <option value="Un professionnel (cabinet, restaurant, bureau...)">Un professionnel (cabinet, restaurant, bureau...)</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Service souhaité</label>
-          <select>
+          <label for="service">Service souhaité</label>
+          <select id="service" name="service" required>
             <option value="">Sélectionner...</option>
-            <option>Abonnement résidentiel</option>
-            <option>Nettoyage canapé / matelas</option>
-            <option>Nettoyage vitres</option>
-            <option>Remise en état locative</option>
-            <option>Contrat locaux professionnels</option>
-            <option>Nettoyage fin de chantier</option>
-            <option>Nettoyage véhicule</option>
+            <option value="Abonnement résidentiel">Abonnement résidentiel</option>
+            <option value="Nettoyage canapé / matelas">Nettoyage canapé / matelas</option>
+            <option value="Nettoyage vitres">Nettoyage vitres</option>
+            <option value="Remise en état locative">Remise en état locative</option>
+            <option value="Contrat locaux professionnels">Contrat locaux professionnels</option>
+            <option value="Nettoyage fin de chantier">Nettoyage fin de chantier</option>
+            <option value="Nettoyage véhicule">Nettoyage véhicule</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Message (facultatif)</label>
-          <textarea rows="3" placeholder="Précisez votre besoin, surface, ville..."></textarea>
+          <label for="message">Message (facultatif)</label>
+          <textarea id="message" name="message" rows="3" placeholder="Précisez votre besoin, surface, ville..."></textarea>
         </div>
-        <button class="form-submit" onclick="sendForm()">Envoyer ma demande</button>
+        <button class="form-submit" type="submit" id="form-btn">Envoyer ma demande</button>
         <p class="form-note">Devis gratuit · Réponse sous 24h · Aucun engagement</p>
-      </div>
+      </form>
       <div class="confirm" id="confirm">
         Votre demande a bien été reçue.<br>Nous vous recontactons sous 24 heures.
       </div>
@@ -1205,9 +1222,42 @@ footer {
 </footer>
 
 <script>
-function sendForm() {
-  document.getElementById('form').style.display = 'none';
-  document.getElementById('confirm').style.display = 'block';
+async function sendForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-btn');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('https://formspree.io/f/mzdnndna', {
+      method: 'POST',
+      body: new FormData(document.getElementById('form')),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('confirm').style.display = 'block';
+    } else {
+      btn.textContent = 'Envoyer ma demande';
+      btn.disabled = false;
+      alert('Une erreur est survenue. Veuillez réessayer ou nous contacter directement.');
+    }
+  } catch (err) {
+    btn.textContent = 'Envoyer ma demande';
+    btn.disabled = false;
+    alert('Une erreur est survenue. Vérifiez votre connexion et réessayez.');
+  }
+}
+
+function choisirForfait(plan) {
+  document.getElementById('forfait-hidden').value = plan;
+  document.getElementById('service').value = 'Abonnement résidentiel';
+  document.getElementById('forfait-label').textContent = plan;
+  document.getElementById('forfait-banner').style.display = 'block';
+}
+
+function preSelectProfil(val) {
+  document.getElementById('profil').value = val;
 }
 
 function openModal(id) {
