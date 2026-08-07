@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cohesif-net.fr/sitemap.xml
+Sitemap: https://cohesifnet.fr/sitemap.xml
