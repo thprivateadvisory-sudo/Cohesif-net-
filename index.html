@@ -106,38 +106,12 @@ nav {
   width: 100%;
   padding: 80px 48px;
   display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 64px;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 700px;
   align-items: center;
 }
 
-/* Photo placeholder — remplacez ce bloc par une vraie <img> */
-.hero-photo {
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #1e3a52 0%, #2a4d6e 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.2);
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  text-align: center;
-  gap: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-.hero-photo svg { opacity: 0.25; }
-
-.hero-photo-label {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  opacity: 0.4;
-}
 
 .hero-eyebrow {
   display: inline-flex;
@@ -314,39 +288,19 @@ nav {
   flex-direction: column;
 }
 
-/* Photo placeholder étape — remplacez par une <img> */
-.step-photo {
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #e8edf2 0%, #d4dce5 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 28px;
-  position: relative;
-  overflow: hidden;
-}
-
-.step-photo svg { color: #94a3b8; }
-.step-photo-hint { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #94a3b8; }
-
-.step-num {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: 36px;
-  height: 36px;
+.step-num-block {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--navy);
   color: var(--white);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .step h3 {
@@ -766,7 +720,6 @@ footer {
   .nav-links { display: none; }
   .logo img { height: 38px; }
   .hero-inner { grid-template-columns: 1fr; padding: 72px 24px 60px; gap: 40px; }
-  .hero-photo { display: none; }
   .section { padding: 64px 24px; }
   .how-steps { grid-template-columns: 1fr; gap: 32px; }
   .services-grid { grid-template-columns: 1fr; gap: 1px; }
@@ -798,7 +751,7 @@ footer {
 <section class="hero">
   <div class="hero-inner">
     <div>
-      <div class="hero-eyebrow">Nancy · Vandœuvre · Laxou · Essey</div>
+      <div class="hero-eyebrow">Nancy · Lunéville · Vandœuvre · Laxou · Essey</div>
       <h1 class="hero-title">Le nettoyage<br>professionnel<br><span class="accent">qui s'occupe<br>de tout.</span></h1>
       <p class="hero-body">Abonnement résidentiel, locaux professionnels, remise en état locative — intervention rapide, résultat garanti.</p>
 
@@ -823,16 +776,6 @@ footer {
       </div>
     </div>
 
-    <!-- Remplacez ce bloc par une vraie photo de résultat nettoyage :
-         <img src="votre-photo.jpg" alt="Résultat nettoyage Cohesif Net" style="width:100%;border-radius:12px;"> -->
-    <div class="hero-photo">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="2"/>
-        <circle cx="24" cy="24" r="7" stroke="currentColor" stroke-width="2"/>
-        <circle cx="38" cy="14" r="2" fill="currentColor"/>
-      </svg>
-      <span class="hero-photo-label">Ajouter une photo ici</span>
-    </div>
   </div>
 </section>
 
@@ -846,47 +789,19 @@ footer {
     <div class="how-steps">
 
       <div class="step">
-        <!-- Remplacez par une vraie photo :
-             <img src="etape-devis.jpg" alt="Demande de devis" style="width:100%;border-radius:10px;margin-bottom:28px;"> -->
-        <div class="step-photo">
-          <span class="step-num">1</span>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <path d="M8 32l5-2 18-18a3 3 0 00-4-4L9 26l-1 6z" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M21 12l7 7" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <span class="step-photo-hint">Photo devis / formulaire</span>
-        </div>
+        <div class="step-num-block">1</div>
         <h3>Vous demandez un devis</h3>
         <p>Remplissez le formulaire en 2 minutes. On vous rappelle sous 24h avec un tarif précis, sans surprise.</p>
       </div>
 
       <div class="step">
-        <!-- Remplacez par une vraie photo :
-             <img src="etape-intervention.jpg" alt="Intervention nettoyage" style="width:100%;border-radius:10px;margin-bottom:28px;"> -->
-        <div class="step-photo">
-          <span class="step-num">2</span>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="12" stroke="#94a3b8" stroke-width="1.5"/>
-            <path d="M14 20l4 4 8-8" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="step-photo-hint">Photo équipe en intervention</span>
-        </div>
+        <div class="step-num-block">2</div>
         <h3>On intervient chez vous</h3>
         <p>Notre équipe arrive à l'heure convenue avec tout le matériel professionnel. Vous n'avez rien à préparer.</p>
       </div>
 
       <div class="step">
-        <!-- Remplacez par une vraie photo :
-             <img src="etape-resultat.jpg" alt="Résultat impeccable" style="width:100%;border-radius:10px;margin-bottom:28px;"> -->
-        <div class="step-photo">
-          <span class="step-num">3</span>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <path d="M10 20h20M10 14h20M10 26h14" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="32" cy="30" r="4" stroke="#94a3b8" stroke-width="1.5"/>
-            <path d="M30 30l1.5 1.5L33.5 29" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="step-photo-hint">Photo résultat impeccable</span>
-        </div>
+        <div class="step-num-block">3</div>
         <h3>Résultat impeccable, garanti</h3>
         <p>Pas satisfait ? On revient. Chaque intervention est couverte et documentée. Pas de mauvaise surprise.</p>
       </div>
@@ -1042,6 +957,10 @@ footer {
         <div class="villes">
           <div class="ville-row">
             <span class="ville-name">Nancy</span>
+            <span class="ville-tag">Principale</span>
+          </div>
+          <div class="ville-row">
+            <span class="ville-name">Lunéville</span>
             <span class="ville-tag">Principale</span>
           </div>
           <div class="ville-row">
