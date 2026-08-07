@@ -802,6 +802,161 @@ footer {
 
 .modal-info strong { font-weight: 600; }
 
+/* GROUPE COHESIF */
+.groupe { background: var(--navy); }
+.groupe .section-num { color: var(--gold); }
+.groupe .section-title { color: var(--white); max-width: 700px; margin: 0 auto; text-align: center; }
+.groupe .accent { color: var(--gold); }
+
+.groupe-header { text-align: center; margin-bottom: 56px; }
+
+.groupe-intro {
+  font-size: 15px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.85;
+  max-width: 580px;
+  margin: 18px auto 0;
+}
+
+.groupe-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.gstat {
+  padding: 32px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+
+.gstat:last-child { border-right: none; }
+
+.gstat-val {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.gstat-sup {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 700;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.gstat-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.poles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.pcard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pcard-link:hover {
+  border-color: rgba(184,150,62,0.35);
+  background: rgba(255,255,255,0.05);
+}
+
+.pcard-current {
+  border-color: var(--gold);
+  background: rgba(184,150,62,0.07);
+}
+
+.pcard-badge {
+  position: absolute;
+  top: -1px; right: 16px;
+  background: var(--gold);
+  color: var(--white);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 0 0 6px 6px;
+}
+
+.pcard-sector {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.pcard-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+}
+
+.pcard-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.65;
+  flex: 1;
+  margin-top: 6px;
+}
+
+.pcard-url {
+  font-size: 11px;
+  color: rgba(255,255,255,0.22);
+  margin-top: 14px;
+  font-weight: 500;
+}
+
+.pcard-current .pcard-url { color: rgba(184,150,62,0.65); }
+.pcard-link .pcard-url { color: rgba(184,150,62,0.45); }
+.pcard-link:hover .pcard-url { color: var(--gold); }
+
+.groupe-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.groupe-id {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.7;
+}
+
+.groupe-id strong { color: rgba(255,255,255,0.5); font-weight: 600; }
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   nav { padding: 0 20px; }
@@ -816,6 +971,8 @@ footer {
   .zone-layout { grid-template-columns: 1fr; gap: 40px; }
   .form-row { grid-template-columns: 1fr; }
   footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+  .poles-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .groupe-footer { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -831,6 +988,7 @@ footer {
     <li><a href="#services">Services</a></li>
     <li><a href="#abonnements">Abonnements</a></li>
     <li><a href="#agences">Agences immo</a></li>
+    <li><a href="#groupe">Groupe Cohesif</a></li>
     <li><a href="#contact" class="nav-cta">Demander un devis</a></li>
   </ul>
 </nav>
@@ -1078,6 +1236,110 @@ footer {
         <p>RC professionnelle souscrite. Contrats écrits systématiques. Produits professionnels certifiés.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- GROUPE COHESIF -->
+<section class="section groupe" id="groupe">
+  <div class="section-inner">
+
+    <div class="groupe-header">
+      <span class="section-num">Notre appartenance</span>
+      <h2 class="section-title">Cohesif Net — pôle du<br><span class="accent">Groupe Cohesif.</span></h2>
+      <p class="groupe-intro">Derrière Cohesif Net, il y a l'ancrage et les ressources d'un groupe multi-pôles. Neuf verticales métiers. Une seule exigence : l'excellence opérationnelle.</p>
+    </div>
+
+    <div class="groupe-stats">
+      <div class="gstat">
+        <div class="gstat-val">8<span class="gstat-sup">+</span></div>
+        <div class="gstat-label">Pôles d'activité</div>
+      </div>
+      <div class="gstat">
+        <div class="gstat-val">2024</div>
+        <div class="gstat-label">Année de fondation</div>
+      </div>
+      <div class="gstat">
+        <div class="gstat-val">Paris 15<span class="gstat-sup" style="font-size:14px;line-height:0;">e</span></div>
+        <div class="gstat-label">Siège social</div>
+      </div>
+    </div>
+
+    <div class="poles-grid">
+
+      <div class="pcard pcard-current">
+        <div class="pcard-badge">Ce pôle</div>
+        <div class="pcard-sector">Propreté · Services</div>
+        <div class="pcard-name">Cohesif Net</div>
+        <p class="pcard-desc">Nettoyage résidentiel et professionnel. Abonnements, fin de chantier, remise en état locative. Nancy — Meurthe-et-Moselle.</p>
+        <span class="pcard-url">cohesif-net.fr</span>
+      </div>
+
+      <a href="https://cohesifcommerce.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Commerce · Distribution</div>
+        <div class="pcard-name">Cohesif Commerce</div>
+        <p class="pcard-desc">Négoce, distribution et solutions commerciales B2B/B2C. Plateforme e-commerce intégrée au groupe.</p>
+        <span class="pcard-url">cohesifcommerce.fr</span>
+      </a>
+
+      <a href="https://cohesifaccess.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Immobilier · Apport d'affaires</div>
+        <div class="pcard-name">Cohesif Access</div>
+        <p class="pcard-desc">Réseau privé d'apporteurs d'affaires immobilier. Accès aux deals off-market, portefeuille vendeurs et acheteurs qualifiés.</p>
+        <span class="pcard-url">cohesifaccess.fr</span>
+      </a>
+
+      <a href="https://cohesifbtp.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Construction · Travaux</div>
+        <div class="pcard-name">Cohesif BTP</div>
+        <p class="pcard-desc">Du gros œuvre à la rénovation intérieure. Expertise reconnue pour les projets professionnels et privés.</p>
+        <span class="pcard-url">cohesifbtp.fr</span>
+      </a>
+
+      <a href="https://cohesifauto.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Automobile · Mobilité</div>
+        <div class="pcard-name">Cohesif Auto</div>
+        <p class="pcard-desc">Vente, import, flottes professionnelles et pièces de collection. Logistique et stations de lavage nouvelle génération.</p>
+        <span class="pcard-url">cohesifauto.fr</span>
+      </a>
+
+      <a href="https://cohesifenergy.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Énergie · Transition</div>
+        <div class="pcard-name">Cohesif Energy</div>
+        <p class="pcard-desc">Bornes IRVE, panneaux solaires, pompes à chaleur et audits énergétiques. En synergie directe avec Cohesif Auto.</p>
+        <span class="pcard-url">cohesifenergy.fr</span>
+      </a>
+
+      <a href="https://cohesifagro.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Agroalimentaire · Sourcing</div>
+        <div class="pcard-name">Cohesif Agro</div>
+        <p class="pcard-desc">Sourcing d'équipements IAA et packaging alimentaire depuis la Chine. Conformité CE garantie, 35–55 % d'économie.</p>
+        <span class="pcard-url">cohesifagro.fr</span>
+      </a>
+
+      <a href="https://cohesifnegoce.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Négoce · Matériaux</div>
+        <div class="pcard-name">Cohesif Négoce</div>
+        <p class="pcard-desc">Négoce de matériaux de construction : bois, métaux, cuivre, isolants, cloisons. Réponse garantie sous 24h.</p>
+        <span class="pcard-url">cohesifnegoce.fr</span>
+      </a>
+
+      <a href="https://cohesifsport.fr" target="_blank" rel="noopener noreferrer" class="pcard pcard-link">
+        <div class="pcard-sector">Sport · Football · Gestion</div>
+        <div class="pcard-name">Cohesif Sport</div>
+        <p class="pcard-desc">Gestion complète de clubs de football : affiliations FFF, subventions CNDS, academy U6-U18, infrastructure sportive.</p>
+        <span class="pcard-url">cohesifsport.fr</span>
+      </a>
+
+    </div>
+
+    <div class="groupe-footer">
+      <p class="groupe-id">
+        <strong>Groupe Cohesif</strong><br>
+        SIRET 889 287 462 00036 · 200 Rue de la Croix Nivert, 75015 Paris
+      </p>
+      <a href="https://groupecohesif.fr" target="_blank" rel="noopener noreferrer" class="btn-cta">Découvrir le Groupe →</a>
+    </div>
+
   </div>
 </section>
 
