@@ -2318,6 +2318,62 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   letter-spacing: .02em;
 }
 
+/* ── Live agent chip on launcher ── */
+#ch-live-chip {
+  position: absolute;
+  top: -3px; left: -3px;
+  background: #22c55e;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 2px 6px 2px 5px;
+  border-radius: 8px;
+  letter-spacing: .06em;
+  font-family: 'Inter', sans-serif;
+  display: none;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(34,197,94,.35);
+  animation: badgePop .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+#ch-live-chip.visible { display: flex; }
+#ch-live-chip::before {
+  content: '';
+  width: 5px; height: 5px;
+  background: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.75); }
+}
+
+/* ── Agent status offline dot ── */
+#ch-agent-dot { transition: background .4s; }
+
+/* ── Agent request confirmation card ── */
+.ch-agent-confirm {
+  margin-top: 8px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  font-weight: 600;
+}
+.ch-agent-confirm.online {
+  background: #f0fdf4;
+  border: 1.5px solid #4ade80;
+  color: #166534;
+}
+.ch-agent-confirm.offline {
+  background: #f8fafc;
+  border: 1.5px solid #94a3b8;
+  color: #475569;
+}
+
 @media (max-width: 430px) {
   #chat-window { right: 10px; left: 10px; width: auto; bottom: 96px; }
   #chat-launcher { right: 14px; bottom: 14px; }
@@ -2340,6 +2396,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
       <path d="M5 5l12 12M17 5L5 17" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
     </svg>
     <span id="chat-badge" aria-hidden="true">1</span>
+    <span id="ch-live-chip" aria-hidden="true"></span>
   </button>
 </div>
 
@@ -2354,7 +2411,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
     </div>
     <div class="ch-info">
       <div class="ch-name">Assistant Cohesif Net</div>
-      <div class="ch-status"><span class="ch-dot"></span>En ligne · Répond instantanément</div>
+      <div class="ch-status" id="ch-status-bar"><span class="ch-dot" id="ch-agent-dot"></span><span id="ch-status-text">En ligne · Répond instantanément</span></div>
     </div>
   </div>
   <div class="ch-messages" id="ch-messages"></div>
@@ -2376,6 +2433,63 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
 (function() {
   var isOpen = false;
   var started = false;
+  var agentState = null; // null | 'await_name' | 'await_phone'
+  var agentInfo = {};
+  var chatLog = [];
+
+  // ── Business hours: is a live agent available? ──
+  function isAgentAvailable() {
+    var now = new Date();
+    var day = now.getDay(); // 0=dim … 6=sam
+    var t = now.getHours() * 60 + now.getMinutes();
+    if (day >= 1 && day <= 5) return t >= 480 && t < 1140; // Lun–Ven 8h–19h
+    if (day === 6)             return t >= 540 && t < 1020; // Sam 9h–17h
+    return false;
+  }
+
+  // ── Update header status & launcher LIVE chip ──
+  function updateAgentStatus() {
+    var dot  = document.getElementById('ch-agent-dot');
+    var txt  = document.getElementById('ch-status-text');
+    var chip = document.getElementById('ch-live-chip');
+    var avail = isAgentAvailable();
+    if (dot)  dot.style.background = avail ? '#4ade80' : '#94a3b8';
+    if (txt)  txt.textContent = avail ? 'Agent disponible · Répond rapidement' : 'Agent hors ligne · Répond sous 24h';
+    if (chip) chip.classList.toggle('visible', avail);
+    if (chip && avail) chip.textContent = 'LIVE';
+  }
+
+  // ── Send urgent alert to team via Formspree ──
+  function sendAgentAlert(name, phone) {
+    var fd = new FormData();
+    fd.append('_subject', '🔴 AGENT EN DIRECT — ' + name + ' (' + phone + ')');
+    fd.append('nom', name);
+    fd.append('telephone', phone);
+    fd.append('service', 'Demande agent en direct');
+    fd.append('message',
+      '⚡ DEMANDE DE MISE EN RELATION EN DIRECT\n\n' +
+      'Nom : ' + name + '\n' +
+      'Téléphone : ' + phone + '\n' +
+      'Heure : ' + new Date().toLocaleString('fr-FR') + '\n' +
+      'Agent disponible : ' + (isAgentAvailable() ? 'OUI (heures ouvrables)' : 'NON — hors horaires') + '\n\n' +
+      '— Historique conversation —\n' + (chatLog.length ? chatLog.join('\n') : '(pas de messages précédents)')
+    );
+    fetch('https://formspree.io/f/mzdnndna', {
+      method: 'POST',
+      body: fd,
+      headers: { 'Accept': 'application/json' }
+    });
+  }
+
+  // ── Live agent intent handler ──
+  function intentAgent() {
+    var avail = isAgentAvailable();
+    agentState = 'await_name';
+    agentInfo = {};
+    var msgOnline  = '\u{1F464} <strong>Un agent est disponible !</strong><br><br>Pour vous mettre en relation, quel est votre <strong>prénom</strong> ?';
+    var msgOffline = '\u{1F464} <strong>Nos agents sont hors ligne</strong> pour le moment.<br><small>Horaires : Lun–Ven 8h–19h · Sam 9h–17h</small><br><br>Laissez vos coordonnées et on vous rappelle dès l’ouverture.<br><br>Votre <strong>prénom</strong> ?';
+    chBot(avail ? msgOnline : msgOffline, [], 550);
+  }
 
   // ── Toggle ──────────────────────────────────
   window.chToggle = function() {
@@ -2392,6 +2506,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
       if (badge) badge.remove();
       if (pulse) pulse.style.animation = 'none';
       if (!started) { started = true; setTimeout(chInit, 220); }
+      else { updateAgentStatus(); }
       setTimeout(function() {
         var inp = document.getElementById('ch-input');
         if (inp) inp.focus();
@@ -2401,6 +2516,8 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
 
   // ── Init greeting ───────────────────────────
   function chInit() {
+    updateAgentStatus();
+    var avail = isAgentAvailable();
     chBot(
       "👋 Bonjour ! Je suis l'assistant de <strong>Cohesif Net</strong>, votre spécialiste en nettoyage professionnel à Nancy et en Lorraine.<br><br>Comment puis-je vous aider ?",
       [
@@ -2408,7 +2525,8 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         { l: "📍 Zone d'intervention", v: "zones" },
         { l: "📅 Abonnements",         v: "abonnements" },
         { l: "🏢 Agences immo",        v: "agences" },
-        { l: "📋 Devis gratuit",       v: "devis" }
+        { l: "📋 Devis gratuit",       v: "devis" },
+        { l: avail ? "👤 Parler à un agent" : "👤 Laisser un message", v: "agent" }
       ]
     );
   }
@@ -2420,6 +2538,27 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
     if (!txt) return;
     inp.value = '';
     chUser(txt);
+
+    // Agent state machine
+    if (agentState === 'await_name') {
+      agentInfo.name = txt;
+      agentState = 'await_phone';
+      return chBot('Merci <strong>' + esc(txt) + '</strong> ! 📞 Votre <strong>numéro de téléphone</strong> ?', [], 500);
+    }
+    if (agentState === 'await_phone') {
+      var name = agentInfo.name, phone = txt;
+      agentState = null;
+      sendAgentAlert(name, phone);
+      var avail = isAgentAvailable();
+      return chBot(
+        (avail
+          ? '✅ <strong>C\'est noté !</strong><div class="ch-agent-confirm online">🟢 Un agent va vous appeler au <strong>' + esc(phone) + '</strong> dans quelques minutes.</div>'
+          : '✅ <strong>Demande enregistrée !</strong><div class="ch-agent-confirm offline">🕐 Nous vous rappellerons au <strong>' + esc(phone) + '</strong> dès l\'ouverture (Lun–Ven 8h–19h · Sam 9h–17h).</div>'),
+        [{ l: '📋 Envoyer aussi un devis', v: 'devis' }],
+        650
+      );
+    }
+
     chProcess(txt);
   };
 
@@ -2427,6 +2566,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   document.getElementById('ch-messages').addEventListener('click', function(e) {
     var btn = e.target.closest('.ch-qr-btn');
     if (!btn) return;
+    if (agentState) return; // Pendant le flux agent, ignorer les quick replies
     var v = btn.getAttribute('data-v');
     btn.closest('.ch-qr') && (btn.closest('.ch-qr').style.pointerEvents = 'none');
     chUser(btn.textContent.replace(/^[^\w]/,'').trim());
@@ -2435,6 +2575,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
 
   // ── Render user bubble ───────────────────────
   function chUser(txt) {
+    chatLog.push('Vous : ' + txt);
     var msgs = document.getElementById('ch-messages');
     var el = document.createElement('div');
     el.className = 'ch-msg user';
@@ -2685,6 +2826,11 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
       return chBot('À bientôt ! 👋 Bonne journée !', [], 350);
     }
 
+    // ─ AGENT EN DIRECT ─
+    if (t === 'agent' || /\b(agent|humain|personne|conseiller|rappel|rappelle|appelle.moi|telephone|parler a un|contact direct|vrai|quelqu.un)\b/.test(t)) {
+      return intentAgent();
+    }
+
     // ─ DEFAULT ─
     return chBot(
       'Je n\'ai pas tout à fait saisi votre demande. 😊<br><br>Je peux vous renseigner sur nos <strong>services, tarifs, zones et abonnements</strong>. Ou bien je vous redirige vers notre formulaire de devis.',
@@ -2692,7 +2838,8 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         { l: '💰 Tarifs & services',   v: 'tarifs' },
         { l: '📍 Zone d\'intervention', v: 'zones' },
         { l: '📅 Abonnements',         v: 'abonnements' },
-        { l: '📋 Demander un devis',   v: 'devis' }
+        { l: '📋 Demander un devis',   v: 'devis' },
+        { l: '👤 Parler à un agent',   v: 'agent' }
       ]
     );
   };
