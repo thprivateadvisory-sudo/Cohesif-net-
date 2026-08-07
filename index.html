@@ -860,14 +860,50 @@ footer {
   text-transform: uppercase;
 }
 
-.poles-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+.carousel-wrap {
+  position: relative;
   margin-bottom: 48px;
 }
 
+.carousel-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar { display: none; }
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.2s, opacity 0.2s;
+  line-height: 0;
+  padding: 0;
+}
+
+.carousel-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
+.carousel-btn:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
+.carousel-btn-prev { left: -20px; }
+.carousel-btn-next { right: -20px; }
+
 .pcard {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 10px;
@@ -971,7 +1007,8 @@ footer {
   .zone-layout { grid-template-columns: 1fr; gap: 40px; }
   .form-row { grid-template-columns: 1fr; }
   footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
-  .poles-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .carousel-btn { display: none; }
+  .pcard { flex: 0 0 80%; }
   .groupe-footer { flex-direction: column; align-items: flex-start; }
 }
 </style>
@@ -1264,7 +1301,11 @@ footer {
       </div>
     </div>
 
-    <div class="poles-grid">
+    <div class="carousel-wrap">
+      <button class="carousel-btn carousel-btn-prev" id="poles-prev" onclick="scrollPoles(-1)" aria-label="Précédent" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="carousel-track" id="poles-track">
 
       <div class="pcard pcard-current">
         <div class="pcard-badge">Ce pôle</div>
@@ -1330,7 +1371,11 @@ footer {
         <span class="pcard-url">cohesifsport.fr</span>
       </a>
 
-    </div>
+      </div><!-- /.carousel-track -->
+      <button class="carousel-btn carousel-btn-next" id="poles-next" onclick="scrollPoles(1)" aria-label="Suivant">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div><!-- /.carousel-wrap -->
 
     <div class="groupe-footer">
       <p class="groupe-id">
@@ -1546,6 +1591,25 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     const t = document.querySelector(a.getAttribute('href'));
     if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
   });
+});
+
+function scrollPoles(dir) {
+  const track = document.getElementById('poles-track');
+  const card = track.querySelector('.pcard');
+  track.scrollBy({ left: dir * (card.offsetWidth + 14), behavior: 'smooth' });
+  setTimeout(updatePoleArrows, 420);
+}
+
+function updatePoleArrows() {
+  const track = document.getElementById('poles-track');
+  if (!track) return;
+  document.getElementById('poles-prev').disabled = track.scrollLeft <= 0;
+  document.getElementById('poles-next').disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+}
+
+document.getElementById('poles-track').addEventListener('scroll', function() {
+  clearTimeout(this._t);
+  this._t = setTimeout(updatePoleArrows, 80);
 });
 </script>
 </body>
