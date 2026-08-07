@@ -2028,5 +2028,749 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   this._t = setTimeout(updatePoleArrows, 80);
 });
 </script>
+
+<!-- ═══════════════════════════════════════════════
+     ASSISTANT IA — COHESIF NET
+════════════════════════════════════════════════ -->
+<style>
+/* ── Launcher ── */
+#chat-launcher {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 300;
+  width: 62px;
+  height: 62px;
+}
+
+@keyframes chatPulse {
+  0%   { transform: scale(1); opacity: .7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+.chat-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(184,150,62,.3);
+  animation: chatPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+#chat-bubble-btn {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 2.5px solid var(--gold);
+  box-shadow: 0 4px 22px rgba(13,27,42,.38);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, box-shadow .2s;
+  padding: 0;
+}
+
+#chat-bubble-btn:hover { transform: scale(1.07); box-shadow: 0 6px 30px rgba(13,27,42,.48); }
+
+.cb-icon-chat  { display: block; }
+.cb-icon-close { display: none; }
+#chat-bubble-btn.open .cb-icon-chat  { display: none; }
+#chat-bubble-btn.open .cb-icon-close { display: block; }
+
+#chat-badge {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  animation: badgePop .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+@keyframes badgePop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* ── Window ── */
+#chat-window {
+  position: fixed;
+  bottom: 106px;
+  right: 28px;
+  z-index: 300;
+  width: 375px;
+  max-height: 564px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(13,27,42,.22), 0 2px 8px rgba(13,27,42,.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(.9) translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+  transform-origin: bottom right;
+}
+
+#chat-window.open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Header */
+.ch-header {
+  background: var(--navy);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ch-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ch-info { flex: 1; min-width: 0; }
+.ch-name { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.2; }
+.ch-status {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+}
+.ch-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+
+/* Messages */
+.ch-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #f7f8fb;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.ch-messages::-webkit-scrollbar { width: 3px; }
+.ch-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.ch-msg { display: flex; gap: 8px; align-items: flex-end; max-width: 91%; }
+.ch-msg.bot { align-self: flex-start; }
+.ch-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.ch-av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ch-bubble {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif;
+}
+
+.ch-msg.bot .ch-bubble {
+  background: #fff;
+  color: var(--navy);
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.ch-msg.user .ch-bubble {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 14px 4px 14px 14px;
+}
+
+/* Quick replies */
+.ch-qr { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+
+.ch-qr-btn {
+  background: #fff;
+  border: 1.5px solid var(--gold);
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background .15s, color .15s;
+  line-height: 1.3;
+}
+.ch-qr-btn:hover { background: var(--gold); color: #fff; }
+
+/* Typing */
+@keyframes typeDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .35; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+.ch-typing {
+  display: flex; gap: 5px; align-items: center;
+  padding: 11px 14px;
+  background: #fff;
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  width: fit-content;
+}
+.ch-typing span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--light);
+  animation: typeDot 1.2s ease-in-out infinite;
+  display: block;
+}
+.ch-typing span:nth-child(2) { animation-delay: .2s; }
+.ch-typing span:nth-child(3) { animation-delay: .4s; }
+
+/* CTA inside bubble */
+.ch-cta {
+  display: inline-block;
+  margin-top: 9px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 7px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background .15s;
+  border: none;
+}
+.ch-cta:hover { background: #a07e32; }
+
+/* Input bar */
+.ch-input-bar {
+  padding: 11px 13px;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+#ch-input {
+  flex: 1;
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: var(--navy);
+  outline: none;
+  background: #f7f8fb;
+  transition: border-color .2s;
+}
+#ch-input:focus { border-color: var(--navy); }
+#ch-input::placeholder { color: var(--light); }
+
+#ch-send {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s, transform .15s;
+  padding: 0;
+}
+#ch-send:hover { background: var(--gold); transform: scale(1.06); }
+
+/* Powered-by */
+.ch-powered {
+  font-size: 10px;
+  color: var(--light);
+  text-align: center;
+  padding: 6px 0 8px;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  letter-spacing: .02em;
+}
+
+@media (max-width: 430px) {
+  #chat-window { right: 10px; left: 10px; width: auto; bottom: 96px; }
+  #chat-launcher { right: 14px; bottom: 14px; }
+}
+</style>
+
+<!-- LAUNCHER -->
+<div id="chat-launcher">
+  <div class="chat-pulse" id="ch-pulse"></div>
+  <button id="chat-bubble-btn" onclick="chToggle()" aria-label="Ouvrir l'assistant Cohesif Net">
+    <!-- chat icon -->
+    <svg class="cb-icon-chat" width="27" height="27" viewBox="0 0 27 27" fill="none" aria-hidden="true">
+      <path d="M13.5 3C8.25 3 4 6.91 4 11.75c0 2.04.77 3.92 2.06 5.43L5 23l5.62-2.07A10.5 10.5 0 0013.5 21.5C18.75 21.5 23 17.59 23 12.75S18.75 3 13.5 3z" fill="white"/>
+      <circle cx="9.5" cy="12.5" r="1.4" fill="#0d1b2a"/>
+      <circle cx="13.5" cy="12.5" r="1.4" fill="#0d1b2a"/>
+      <circle cx="17.5" cy="12.5" r="1.4" fill="#0d1b2a"/>
+    </svg>
+    <!-- close icon -->
+    <svg class="cb-icon-close" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M5 5l12 12M17 5L5 17" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    <span id="chat-badge" aria-hidden="true">1</span>
+  </button>
+</div>
+
+<!-- CHAT WINDOW -->
+<div id="chat-window" role="dialog" aria-modal="false" aria-label="Assistant Cohesif Net">
+  <div class="ch-header">
+    <div class="ch-avatar">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" fill="white"/>
+        <path d="M4 20c0-3.31 3.58-6 8-6s8 2.69 8 6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ch-info">
+      <div class="ch-name">Assistant Cohesif Net</div>
+      <div class="ch-status"><span class="ch-dot"></span>En ligne · Répond instantanément</div>
+    </div>
+  </div>
+  <div class="ch-messages" id="ch-messages"></div>
+  <div class="ch-input-bar">
+    <input id="ch-input" type="text" placeholder="Posez votre question…" autocomplete="off" maxlength="320" onkeydown="if(event.key==='Enter'){event.preventDefault();chSend();}">
+    <button id="ch-send" onclick="chSend()" aria-label="Envoyer">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+        <path d="M15 8.5L2 2.5l3.2 6-3.2 6 13-6z" fill="white"/>
+      </svg>
+    </button>
+  </div>
+  <div class="ch-powered">Propulsé par l'IA · Cohesif Net Nancy</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// ASSISTANT IA · COHESIF NET
+// ═══════════════════════════════════════════════
+(function() {
+  var isOpen = false;
+  var started = false;
+
+  // ── Toggle ──────────────────────────────────
+  window.chToggle = function() {
+    isOpen = !isOpen;
+    var btn = document.getElementById('chat-bubble-btn');
+    var win = document.getElementById('chat-window');
+    var badge = document.getElementById('chat-badge');
+    var pulse = document.getElementById('ch-pulse');
+
+    btn.classList.toggle('open', isOpen);
+    win.classList.toggle('open', isOpen);
+
+    if (isOpen) {
+      if (badge) badge.remove();
+      if (pulse) pulse.style.animation = 'none';
+      if (!started) { started = true; setTimeout(chInit, 220); }
+      setTimeout(function() {
+        var inp = document.getElementById('ch-input');
+        if (inp) inp.focus();
+      }, 300);
+    }
+  };
+
+  // ── Init greeting ───────────────────────────
+  function chInit() {
+    chBot(
+      "👋 Bonjour ! Je suis l'assistant de <strong>Cohesif Net</strong>, votre spécialiste en nettoyage professionnel à Nancy et en Lorraine.<br><br>Comment puis-je vous aider ?",
+      [
+        { l: "💰 Tarifs & services",   v: "tarifs" },
+        { l: "📍 Zone d'intervention", v: "zones" },
+        { l: "📅 Abonnements",         v: "abonnements" },
+        { l: "🏢 Agences immo",        v: "agences" },
+        { l: "📋 Devis gratuit",       v: "devis" }
+      ]
+    );
+  }
+
+  // ── Send user input ──────────────────────────
+  window.chSend = function() {
+    var inp = document.getElementById('ch-input');
+    var txt = inp.value.trim();
+    if (!txt) return;
+    inp.value = '';
+    chUser(txt);
+    chProcess(txt);
+  };
+
+  // ── Quick-reply delegation ───────────────────
+  document.getElementById('ch-messages').addEventListener('click', function(e) {
+    var btn = e.target.closest('.ch-qr-btn');
+    if (!btn) return;
+    var v = btn.getAttribute('data-v');
+    btn.closest('.ch-qr') && (btn.closest('.ch-qr').style.pointerEvents = 'none');
+    chUser(btn.textContent.replace(/^[^\w]/,'').trim());
+    chProcess(v);
+  });
+
+  // ── Render user bubble ───────────────────────
+  function chUser(txt) {
+    var msgs = document.getElementById('ch-messages');
+    var el = document.createElement('div');
+    el.className = 'ch-msg user';
+    el.innerHTML = '<div class="ch-bubble">' + esc(txt) + '</div>';
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Render bot bubble (with typing delay) ────
+  function chBot(html, qrs, delay) {
+    var msgs = document.getElementById('ch-messages');
+    var typingWrap = document.createElement('div');
+    typingWrap.className = 'ch-msg bot';
+    typingWrap.innerHTML =
+      '<div class="ch-av"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="white"/><path d="M4 20c0-3.31 3.58-6 8-6s8 2.69 8 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>' +
+      '<div class="ch-typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(typingWrap);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    var ms = delay || Math.min(650 + html.replace(/<[^>]+>/g,'').length * 10, 1400);
+
+    setTimeout(function() {
+      typingWrap.remove();
+      var el = document.createElement('div');
+      el.className = 'ch-msg bot';
+      var qrHtml = '';
+      if (qrs && qrs.length) {
+        qrHtml = '<div class="ch-qr">';
+        qrs.forEach(function(q) {
+          qrHtml += '<button class="ch-qr-btn" data-v="' + esc(q.v) + '">' + q.l + '</button>';
+        });
+        qrHtml += '</div>';
+      }
+      el.innerHTML =
+        '<div class="ch-av"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="white"/><path d="M4 20c0-3.31 3.58-6 8-6s8 2.69 8 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>' +
+        '<div><div class="ch-bubble">' + html + '</div>' + qrHtml + '</div>';
+      msgs.appendChild(el);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, ms);
+  }
+
+  // ── Escape HTML ──────────────────────────────
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Normalize text for intent matching ───────
+  function norm(s) {
+    return s.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/[^a-z0-9 ]/g,' ');
+  }
+
+  // ── Scroll to contact section ────────────────
+  function goDevis() {
+    var el = document.getElementById('contact');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (isOpen) chToggle();
+  }
+
+  // ── Process message / intent engine ──────────
+  window.chProcess = function(raw) {
+    var t = norm(raw);
+
+    // Special internal values from quick replies
+    if (t === 'devis' || t === 'go devis') {
+      goDevis();
+      return chBot('Je vous redirige vers le formulaire de devis 📋<br><br>Remplissez-le en <strong>2 minutes</strong> — réponse garantie sous <strong>24h</strong>, sans engagement.', [], 400);
+    }
+    if (t === 'tarifs') return intentTarifs();
+    if (t === 'zones')  return intentZones();
+    if (t === 'abonnements') return intentAbonnements();
+    if (t === 'agences') return intentAgences();
+    if (t === 'groupecohesif') {
+      window.open('https://groupecohesif.fr','_blank');
+      return chBot('J\'ouvre le site du <strong>Groupe Cohesif</strong> dans un nouvel onglet.', [], 300);
+    }
+
+    // ─ SALUTATION ─
+    if (/^(bonjour|bonsoir|salut|hello|coucou|hi |hey |bjr|bsr)/.test(t)) {
+      return chBot('Bonjour ! 👋 Ravi de vous accueillir.<br>Comment puis-je vous aider aujourd\'hui ?', [
+        { l: '💰 Tarifs', v: 'tarifs' },
+        { l: '📍 Zone', v: 'zones' },
+        { l: '📅 Abonnements', v: 'abonnements' },
+        { l: '📋 Devis gratuit', v: 'devis' }
+      ]);
+    }
+
+    // ─ TARIFS / PRIX ─
+    if (/tarif|prix|cout|coute|cher|pas cher|combien|gratuit|devis|budget/.test(t)) return intentTarifs();
+
+    // ─ CANAPE / MATELAS ─
+    if (/canape|matelas|tapis|moquette|fauteuil|textile|tissu|injection|extraction|capitonne|coussin/.test(t)) {
+      return chBot(
+        '🛋️ <strong>Nettoyage canapés, matelas & textiles</strong><br><br>' +
+        '✅ Injection-extraction professionnelle<br>' +
+        '✅ Canapé, matelas, tapis, moquette, fauteuils<br>' +
+        '✅ Résultat visible en une seule intervention<br>' +
+        '💰 À partir de <strong>89 € HT</strong><br><br>' +
+        'Le tarif exact dépend de la taille et du tissu. Devis gratuit sous 24h.',
+        [{ l: '📋 Demander un devis', v: 'devis' }, { l: '⏱️ Délais', v: 'delais' }]
+      );
+    }
+
+    // ─ VITRES ─
+    if (/vitre|fenetre|baie vitree|veranda|velux|verre|vitrage|baies/.test(t)) {
+      return chBot(
+        '🪟 <strong>Nettoyage de vitres & surfaces vitrées</strong><br><br>' +
+        '✅ Vitres intérieures et extérieures<br>' +
+        '✅ Vérandas, baies vitrées, velux<br>' +
+        '✅ Résultat sans traces, produits professionnels<br>' +
+        '💰 À partir de <strong>69 € HT</strong><br><br>' +
+        'Intervention sur Nancy et toute la Lorraine.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ VEHICULE / VOITURE ─
+    if (/vehicule|voiture|auto|siege auto|detailing|interieur voiture|habitacle|bagnole|car/.test(t)) {
+      return chBot(
+        '🚗 <strong>Detailing intérieur de véhicule</strong><br><br>' +
+        '✅ Sièges, moquettes, plastiques, vitres<br>' +
+        '✅ Voiture restituée comme neuve<br>' +
+        '💰 À partir de <strong>79 € HT</strong><br><br>' +
+        'Service disponible à Nancy et dans l\'agglomération.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ FIN DE CHANTIER ─
+    if (/chantier|construction|travaux|btp|poussiere|livraison|renovation|apres travaux/.test(t)) {
+      return chBot(
+        '🔨 <strong>Nettoyage fin de chantier</strong><br><br>' +
+        '✅ Après tous types de travaux BTP<br>' +
+        '✅ Élimination des poussières et résidus<br>' +
+        '✅ Remise en état complète avant livraison<br>' +
+        '💰 Devis sur mesure — réponse sous <strong>24h</strong><br><br>' +
+        'Zone : Nancy, Meurthe-et-Moselle et Lorraine.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ REMISE EN ÉTAT LOCATIVE ─
+    if (/locati|locataire|logement|appartement|etat des lieux|fin de bail|entre deux|remise en etat|relocation/.test(t)) {
+      return chBot(
+        '🏠 <strong>Remise en état locative</strong><br><br>' +
+        '✅ Nettoyage complet entre deux locataires<br>' +
+        '✅ Cuisine, salle de bain, sols, vitres<br>' +
+        '✅ Appartement prêt à remettre en location<br>' +
+        '⚡ Intervention sous <strong>48h</strong> sur Nancy<br>' +
+        '💰 De <strong>180 € à 600 € HT</strong> selon la surface',
+        [
+          { l: '📋 Demander un devis', v: 'devis' },
+          { l: '🏢 Je suis une agence', v: 'agences' }
+        ]
+      );
+    }
+
+    // ─ LOCAUX PROFESSIONNELS ─
+    if (/bureau|local|professionnel|cabinet|restaurant|commerce|clinique|entreprise|contrat mensuel|bureaux|locaux/.test(t)) {
+      return chBot(
+        '🏢 <strong>Nettoyage locaux professionnels</strong><br><br>' +
+        '✅ Nettoyage nocturne récurrent<br>' +
+        '✅ Cabinets médicaux, restaurants, commerces, bureaux PME<br>' +
+        '✅ Contrat mensuel adapté à votre activité<br>' +
+        '💰 De <strong>200 € à 500 €/mois</strong><br><br>' +
+        'Zone : Meurthe-et-Moselle et Lorraine.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ ABONNEMENTS ─
+    if (/abonnement|forfait|mensuel|formule|essentiel|confort|prestige/.test(t) && !/forfait essentiel|forfait confort|forfait prestige/.test(t)) return intentAbonnements();
+
+    if (t === 'forfait essentiel') {
+      if (typeof choisirForfait === 'function') choisirForfait('Essentiel — 150€/mois');
+      return chBot('Parfait ! J\'ai pré-sélectionné le forfait <strong>Essentiel (150 €/mois)</strong> dans le formulaire.<br>Remplissez vos coordonnées — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+    }
+    if (t === 'forfait confort') {
+      if (typeof choisirForfait === 'function') choisirForfait('Confort — 220€/mois');
+      return chBot('Parfait ! Le forfait <strong>Confort (220 €/mois)</strong> est pré-sélectionné.<br>Accédez au formulaire — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+    }
+    if (t === 'forfait prestige') {
+      if (typeof choisirForfait === 'function') choisirForfait('Prestige — 320€/mois');
+      return chBot('Excellent ! Le forfait <strong>Prestige (320 €/mois)</strong> est pré-sélectionné.<br>Remplissez vos coordonnées dans le formulaire.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+    }
+
+    // ─ AGENCES ─
+    if (/agence|immobilier|immo|gestionnaire|parc locatif|convention|partenaire|agences/.test(t)) return intentAgences();
+
+    // ─ ZONES ─
+    if (/ville|villes|zone|secteur|interven|couvrez|nancy|lunevill|vandoeuvre|laxou|essey|pont.a.mousson|toul|villers|maxeville|metz|thionville|lorraine|meurthe|54/.test(t)) return intentZones();
+
+    // ─ DÉLAIS ─
+    if (/delai|rapide|urgent|quand|disponible|48h|24h|combien de temps|planifier|vite/.test(t)) {
+      return intentDelais();
+    }
+
+    // ─ HORAIRES ─
+    if (/horaire|heure|ouvert|ferme|samedi|dimanche|semaine/.test(t)) {
+      return chBot(
+        '🕐 <strong>Nos horaires</strong><br><br>' +
+        '📅 Lundi – Vendredi : <strong>8h00 – 19h00</strong><br>' +
+        '📅 Samedi : <strong>9h00 – 17h00</strong><br>' +
+        '❌ Dimanche : fermé<br><br>' +
+        'Notre formulaire de devis est disponible <strong>24h/24</strong> — réponse sous 24h ouvrées.',
+        [{ l: '📋 Envoyer un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ GARANTIE / ASSURANCE ─
+    if (/garantie|assurance|rc|responsabilite|satisfait|pas content|probleme|reclamation|qualite/.test(t)) {
+      return chBot(
+        '🛡️ <strong>Notre engagement qualité</strong><br><br>' +
+        '✅ Résultat garanti — pas satisfait, on revient<br>' +
+        '✅ RC professionnelle souscrite<br>' +
+        '✅ Contrats écrits systématiques<br>' +
+        '✅ Produits professionnels certifiés<br>' +
+        '✅ Chaque intervention documentée<br><br>' +
+        'Aucune mauvaise surprise.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ GROUPE COHESIF ─
+    if (/groupe cohesif|groupe|cohesif|paris|siret|filiale|pole d activite|qui etes vous|qui sommes nous/.test(t)) {
+      return chBot(
+        '🏛️ <strong>Cohesif Net</strong> est un pôle du <strong>Groupe Cohesif</strong>, groupe multi-activités fondé en 2024, dont le siège est à Paris 15e.<br><br>' +
+        'Le Groupe opère <strong>8+ pôles</strong> : Commerce, Immobilier (Access), BTP, Auto, Énergie, Agro, Négoce, Sport.<br><br>' +
+        'SIRET : 889 287 462 00036',
+        [
+          { l: '🌐 Voir le groupe', v: 'groupecohesif' },
+          { l: '📋 Demander un devis', v: 'devis' }
+        ]
+      );
+    }
+
+    // ─ MERCI ─
+    if (/merci|super|parfait|nickel|top|genial|excellent|compris|tres bien|cool/.test(t)) {
+      return chBot(
+        'Avec plaisir ! 😊 N\'hésitez pas si vous avez d\'autres questions.',
+        [{ l: '📋 Demander un devis', v: 'devis' }]
+      );
+    }
+
+    // ─ AU REVOIR ─
+    if (/au revoir|bye|bonne journee|bonne soiree|a bientot|ciao/.test(t)) {
+      return chBot('À bientôt ! 👋 Bonne journée !', [], 350);
+    }
+
+    // ─ DEFAULT ─
+    return chBot(
+      'Je n\'ai pas tout à fait saisi votre demande. 😊<br><br>Je peux vous renseigner sur nos <strong>services, tarifs, zones et abonnements</strong>. Ou bien je vous redirige vers notre formulaire de devis.',
+      [
+        { l: '💰 Tarifs & services',   v: 'tarifs' },
+        { l: '📍 Zone d\'intervention', v: 'zones' },
+        { l: '📅 Abonnements',         v: 'abonnements' },
+        { l: '📋 Demander un devis',   v: 'devis' }
+      ]
+    );
+  };
+
+  // ── Intent helpers ────────────────────────────
+
+  function intentTarifs() {
+    chBot(
+      '💰 <strong>Nos tarifs principaux</strong><br><br>' +
+      '🛋️ Canapé / matelas — à partir de <strong>89 € HT</strong><br>' +
+      '🪟 Vitres — à partir de <strong>69 € HT</strong><br>' +
+      '🚗 Nettoyage véhicule — à partir de <strong>79 € HT</strong><br>' +
+      '🏠 Remise en état locative — <strong>180 € – 600 € HT</strong><br>' +
+      '🏢 Locaux professionnels — <strong>200 € – 500 €/mois</strong><br>' +
+      '🔨 Fin de chantier — sur devis (réponse 24h)<br><br>' +
+      'Devis gratuit et sans engagement, réponse garantie sous 24h.',
+      [
+        { l: '📋 Demander un devis', v: 'devis' },
+        { l: '📅 Voir les abonnements', v: 'abonnements' }
+      ]
+    );
+  }
+
+  function intentZones() {
+    chBot(
+      '📍 <strong>Zone d\'intervention</strong><br><br>' +
+      '<strong>Principales :</strong> Nancy, Lunéville<br>' +
+      '<strong>Couvertes :</strong> Vandœuvre-lès-Nancy, Laxou, Essey-lès-Nancy, Pont-à-Mousson, Toul, Villers-lès-Nancy, Maxéville<br>' +
+      '<strong>Bientôt :</strong> Metz, Thionville<br><br>' +
+      'Nous couvrons l\'ensemble de la <strong>Meurthe-et-Moselle (54)</strong> et de la région <strong>Lorraine</strong>.',
+      [{ l: '📋 Demander un devis', v: 'devis' }]
+    );
+  }
+
+  function intentAbonnements() {
+    chBot(
+      '📅 <strong>Nos 3 forfaits résidentiels</strong><br><br>' +
+      '⭐ <strong>Essentiel — 150 €/mois</strong><br>' +
+      '1 intervention • canapé ou matelas • vitres incluses<br><br>' +
+      '🌟 <strong>Confort — 220 €/mois</strong> <em>(le plus populaire)</em><br>' +
+      '2 interventions • multi-supports • priorité planning<br><br>' +
+      '💎 <strong>Prestige — 320 €/mois</strong><br>' +
+      'Interventions hebdomadaires • tous supports • interlocuteur dédié • garantie 24h',
+      [
+        { l: '⭐ Essentiel 150€', v: 'forfait-essentiel' },
+        { l: '🌟 Confort 220€',  v: 'forfait-confort' },
+        { l: '💎 Prestige 320€', v: 'forfait-prestige' }
+      ]
+    );
+  }
+
+  function intentAgences() {
+    if (typeof preSelectProfil === 'function') preSelectProfil('Une agence immobilière');
+    chBot(
+      '🏢 <strong>Offre agences immobilières</strong><br><br>' +
+      '✅ Tarifs dégressifs selon le volume de missions<br>' +
+      '✅ Garantie intervention sous <strong>48h</strong><br>' +
+      '✅ Convention partenaire personnalisée<br>' +
+      '✅ Interlocuteur dédié<br><br>' +
+      'Plusieurs agences sur Nancy et en Meurthe-et-Moselle sont déjà partenaires.<br><br>' +
+      'J\'ai pré-sélectionné "Agence immobilière" dans le formulaire.',
+      [{ l: '📝 Demander une convention', v: 'devis' }]
+    );
+  }
+
+  function intentDelais() {
+    chBot(
+      '⏱️ <strong>Nos délais</strong><br><br>' +
+      '📬 Réponse devis : sous <strong>24h</strong> garantie<br>' +
+      '🚀 Intervention urgente (locative) : sous <strong>48h</strong> sur Nancy<br>' +
+      '📅 Abonnements : plage fixe définie à votre convenance<br>' +
+      '💎 Forfait Prestige : garantie intervention <strong>24h</strong><br><br>' +
+      'Lun–Ven 8h–19h · Sam 9h–17h',
+      [{ l: '📋 Demander un devis', v: 'devis' }]
+    );
+  }
+
+})();
+</script>
 </body>
 </html>
