@@ -1017,6 +1017,61 @@ nav {
   line-height: 1.8;
 }
 
+/* AVIS */
+.avis { background: var(--cream); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.avis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.avis-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avis-stars {
+  color: var(--gold);
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.avis-text {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.75;
+  flex: 1;
+}
+
+.avis-author {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.avis-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.avis-city {
+  font-size: 12px;
+  color: var(--light);
+}
+
+@media (max-width: 900px) {
+  .avis-grid { grid-template-columns: 1fr; }
+}
+
 /* FOOTER */
 footer {
   background: var(--navy);
@@ -1795,6 +1850,46 @@ footer {
       <a href="https://groupecohesif.fr" target="_blank" rel="noopener noreferrer" class="btn-cta">Découvrir le Groupe →</a>
     </div>
 
+  </div>
+</section>
+
+<!-- AVIS CLIENTS -->
+<section class="section avis" id="avis">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">Avis clients</span>
+      <h2 class="section-title">Ce que disent nos clients.</h2>
+    </div>
+    <div class="avis-grid">
+
+      <div class="avis-card">
+        <div class="avis-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p class="avis-text">Intervention rapide pour le nettoyage de mon canapé. Résultat impeccable, le tissu est comme neuf. Sérieux et ponctuel.</p>
+        <div class="avis-author">
+          <span class="avis-name">Sophie M.</span>
+          <span class="avis-city">Nancy</span>
+        </div>
+      </div>
+
+      <div class="avis-card">
+        <div class="avis-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p class="avis-text">Remise en état locative réalisée en 48h comme annoncé. L'appartement était prêt à remettre en location dès le lendemain. Très satisfaite.</p>
+        <div class="avis-author">
+          <span class="avis-name">Julie K.</span>
+          <span class="avis-city">Vandœuvre-lès-Nancy</span>
+        </div>
+      </div>
+
+      <div class="avis-card">
+        <div class="avis-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p class="avis-text">Nettoyage de fin de chantier propre et dans les délais. Équipe sérieuse, bon contact. Je referai appel à eux sans hésiter.</p>
+        <div class="avis-author">
+          <span class="avis-name">Thomas R.</span>
+          <span class="avis-city">Laxou</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
