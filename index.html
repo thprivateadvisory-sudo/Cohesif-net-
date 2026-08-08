@@ -318,6 +318,16 @@ nav {
 
 .nav-links a:hover { color: var(--white); }
 
+.nav-recall {
+  border: 1.5px solid rgba(255,255,255,0.28) !important;
+  color: rgba(255,255,255,0.75) !important;
+  padding: 9px 20px;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  transition: border-color 0.2s, color 0.2s !important;
+}
+.nav-recall:hover { border-color: rgba(255,255,255,0.65) !important; color: var(--white) !important; }
+
 .nav-cta {
   background: var(--gold) !important;
   color: var(--white) !important;
@@ -1340,6 +1350,7 @@ footer {
     <li><a href="#abonnements">Abonnements</a></li>
     <li><a href="#agences">Agences immo</a></li>
     <li><a href="#groupe">Groupe Cohesif</a></li>
+    <li><a href="#" class="nav-recall" onclick="openModal('modal-rappel');return false;">Se faire rappeler</a></li>
     <li><a href="#contact" class="nav-cta">Demander un devis</a></li>
   </ul>
 </nav>
@@ -1916,6 +1927,32 @@ footer {
   </div>
 </div>
 
+<!-- MODAL SE FAIRE RAPPELER -->
+<div class="modal-overlay" id="modal-rappel" onclick="closeModal('modal-rappel')">
+  <div class="modal" style="max-width:440px;padding:40px;" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('modal-rappel')" aria-label="Fermer">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2 style="margin-bottom:8px;">Se faire rappeler</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6;">Laissez vos coordonnées — nous vous rappelons sous 24h, sans engagement.</p>
+    <form class="form" id="form-rappel" onsubmit="sendRappel(event)">
+      <div class="form-group">
+        <label for="rappel-nom">Prénom & Nom</label>
+        <input type="text" id="rappel-nom" name="nom" placeholder="Marie Martin" required>
+      </div>
+      <div class="form-group">
+        <label for="rappel-tel">Téléphone</label>
+        <input type="tel" id="rappel-tel" name="telephone" placeholder="+33 6 00 00 00 00" required>
+      </div>
+      <button class="form-submit" type="submit" id="rappel-btn" style="margin-top:4px;">Me faire rappeler</button>
+      <p class="form-note">Rappel sous 24h · Lun–Ven 8h–19h · Sam 9h–17h</p>
+    </form>
+    <div id="rappel-confirm" style="display:none;padding:24px 0;text-align:center;font-size:15px;color:var(--navy);line-height:1.8;">
+      Demande enregistrée.<br>Nous vous rappelons très prochainement.
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
@@ -1956,6 +1993,35 @@ async function sendForm(e) {
     btn.textContent = 'Envoyer ma demande';
     btn.disabled = false;
     alert('Une erreur est survenue. Vérifiez votre connexion et réessayez.');
+  }
+}
+
+async function sendRappel(e) {
+  e.preventDefault();
+  const btn = document.getElementById('rappel-btn');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+  const fd = new FormData(document.getElementById('form-rappel'));
+  fd.append('_subject', 'Demande de rappel — Cohesif Net');
+  fd.append('service', 'Demande de rappel');
+  try {
+    const res = await fetch('https://formspree.io/f/mzdnndna', {
+      method: 'POST',
+      body: fd,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      document.getElementById('form-rappel').style.display = 'none';
+      document.getElementById('rappel-confirm').style.display = 'block';
+    } else {
+      btn.textContent = 'Me faire rappeler';
+      btn.disabled = false;
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    }
+  } catch {
+    btn.textContent = 'Me faire rappeler';
+    btn.disabled = false;
+    alert('Vérifiez votre connexion et réessayez.');
   }
 }
 
