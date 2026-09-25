@@ -8,4 +8,10 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://cohesifnet.fr/"/>
   </url>
+  <url>
+    <loc>https://cohesifnet.fr/sous-traitants.html</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
