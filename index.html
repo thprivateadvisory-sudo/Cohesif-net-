@@ -166,9 +166,9 @@
             },
             "priceSpecification": {
               "@type": "PriceSpecification",
-              "price": "55",
+              "price": "59",
               "priceCurrency": "EUR",
-              "valueAddedTaxIncluded": false
+              "valueAddedTaxIncluded": true
             }
           },
           {
@@ -180,9 +180,9 @@
             },
             "priceSpecification": {
               "@type": "PriceSpecification",
-              "price": "45",
+              "price": "49",
               "priceCurrency": "EUR",
-              "valueAddedTaxIncluded": false
+              "valueAddedTaxIncluded": true
             }
           },
           {
@@ -262,7 +262,7 @@
           "name": "Combien coûte le nettoyage d'un canapé à Nancy ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Le nettoyage de canapé par injection-extraction commence à partir de 59 € HT à Nancy et en Meurthe-et-Moselle (matelas dès 55 € HT). Le prix exact dépend de la taille et du type de tissu. Demandez un devis gratuit en ligne — réponse garantie sous 24h."
+            "text": "Le nettoyage de canapé par injection-extraction commence à partir de 69 € TTC à Nancy et en Meurthe-et-Moselle (matelas dès 59 € TTC). Le prix exact dépend de la taille et du type de tissu. Demandez un devis gratuit en ligne — réponse garantie sous 24h."
           }
         },
         {
@@ -472,6 +472,34 @@ nav {
   font-weight: 500;
   color: rgba(255,255,255,0.7);
 }
+
+.tax-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+}
+.tax-toggle button {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tax-toggle button[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+.tax-toggle button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.tax-toggle--dark { margin: -20px 0 32px; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+.tax-toggle--dark button { color: rgba(255,255,255,0.7); }
+.tax-toggle--dark button[aria-pressed="true"] { background: var(--white); color: var(--navy); }
+.agences-items + .tax-toggle, .agences-layout .tax-toggle { margin: 0 0 8px; }
 
 .hero-btns {
   display: flex;
@@ -1843,9 +1871,11 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
 
       <div class="hero-price-row">
         <span class="hero-price-from">À partir de</span>
-        <span class="hero-price-amount">45€</span>
-        <span class="hero-price-unit">HT</span>
+        <span class="hero-price-amount"><span class="px" data-ttc="49">49</span>€</span>
+        <span class="hero-price-unit tax-unit">TTC</span>
       </div>
+      <div class="tax-toggle tax-toggle--dark" role="group" aria-label="Affichage des prix"><button type="button" data-tax="ttc" aria-pressed="true">Particulier · TTC</button><button type="button" data-tax="ht" aria-pressed="false">Professionnel · HT</button></div>
+
 
       <div class="hero-btns">
         <a href="#contact" class="btn-cta">Demander un devis gratuit</a>
@@ -1903,19 +1933,20 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
     <div class="section-header reveal">
       <span class="section-num">Ce que nous faisons</span>
       <h2 class="section-title">Trois activités. Une seule exigence.</h2>
+      <div class="tax-toggle" role="group" aria-label="Affichage des prix"><button type="button" data-tax="ttc" aria-pressed="true">Particulier · TTC</button><button type="button" data-tax="ht" aria-pressed="false">Professionnel · HT</button></div>
     </div>
     <div class="services-grid">
       <div class="scard reveal">
         <span class="scard-num">Résidentiel · Nancy & 54</span>
         <h3>Canapés, matelas & textiles</h3>
         <p>Nettoyage par injection-extraction à Nancy et en Meurthe-et-Moselle — résultat visible en une intervention. Canapé, matelas, tapis, moquette, fauteuils.</p>
-        <div class="scard-price">À partir de <span>55 € HT</span></div>
+        <div class="scard-price">À partir de <span><span class="px" data-ttc="59">59</span> € <span class="tax-unit">TTC</span></span></div>
       </div>
       <div class="scard reveal">
         <span class="scard-num">Résidentiel · Lorraine</span>
         <h3>Vitres & surfaces vitrées</h3>
         <p>Vitres intérieures et extérieures, vérandas, baies vitrées, velux en Lorraine. Produits professionnels, résultat sans traces.</p>
-        <div class="scard-price">À partir de <span>45 € HT</span></div>
+        <div class="scard-price">À partir de <span><span class="px" data-ttc="49">49</span> € <span class="tax-unit">TTC</span></span></div>
       </div>
       <div class="scard reveal">
         <span class="scard-num">Professionnel · Meurthe-et-Moselle</span>
@@ -1927,19 +1958,19 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
         <span class="scard-num">Immobilier · Nancy</span>
         <h3>Remise en état locative</h3>
         <p>Nettoyage complet entre deux locataires à Nancy et en Lorraine. Cuisine, SDB, sols, vitres — appartement prêt à remettre en location.</p>
-        <div class="scard-price">De <span>149 € à 490 € HT</span></div>
+        <div class="scard-price">De <span><span class="px" data-ttc="179">179</span> € à <span class="px" data-ttc="589">589</span> € <span class="tax-unit">TTC</span></span></div>
       </div>
       <div class="scard reveal">
         <span class="scard-num">Professionnel · Lorraine</span>
         <h3>Locaux & bureaux (contrat)</h3>
         <p>Nettoyage nocturne récurrent en Meurthe-et-Moselle. Cabinets médicaux, restaurants, commerces, bureaux PME. Contrat mensuel.</p>
-        <div class="scard-price">De <span>200 € à 500 €/mois</span></div>
+        <div class="scard-price">De <span><span class="px" data-ht="200">240</span> € à <span class="px" data-ht="500">600</span> € <span class="tax-unit">TTC</span>/mois</span></div>
       </div>
       <div class="scard reveal">
         <span class="scard-num">Auto · Nancy</span>
         <h3>Nettoyage intérieur véhicules</h3>
         <p>Detailing intérieur professionnel à Nancy. Sièges, moquettes, plastiques, vitres — voiture restituée comme neuve.</p>
-        <div class="scard-price">À partir de <span>59 € HT</span></div>
+        <div class="scard-price">À partir de <span><span class="px" data-ttc="65">65</span> € <span class="tax-unit">TTC</span></span></div>
       </div>
     </div>
   </div>
@@ -1951,25 +1982,26 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
     <div class="section-header reveal">
       <span class="section-num">Abonnements résidentiels</span>
       <h2 class="section-title">Choisissez votre forfait mensuel.</h2>
+      <div class="tax-toggle" role="group" aria-label="Affichage des prix"><button type="button" data-tax="ttc" aria-pressed="true">Particulier · TTC</button><button type="button" data-tax="ht" aria-pressed="false">Professionnel · HT</button></div>
     </div>
     <div class="plans">
       <div class="plan reveal">
         <div class="plan-name">Essentiel</div>
-        <div class="plan-price">89<span style="font-size:22px;font-weight:400;color:var(--light);">€</span></div>
-        <div class="plan-period">par mois</div>
+        <div class="plan-price"><span class="px" data-ttc="99">99</span><span style="font-size:22px;font-weight:400;color:var(--light);">€</span></div>
+        <div class="plan-period"><span class="tax-unit">TTC</span> par mois</div>
         <ul class="plan-list">
           <li>1 intervention mensuelle</li>
           <li>Canapé ou matelas au choix</li>
           <li>Nettoyage des vitres inclus</li>
           <li>Planification fixe</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Essentiel — 89€/mois')">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Essentiel')">Choisir ce forfait</a>
       </div>
       <div class="plan featured reveal">
         <div class="plan-badge">Populaire</div>
         <div class="plan-name">Confort</div>
-        <div class="plan-price" style="color:var(--white);">169<span style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.4);">€</span></div>
-        <div class="plan-period">par mois</div>
+        <div class="plan-price" style="color:var(--white);"><span class="px" data-ttc="189">189</span><span style="font-size:22px;font-weight:400;color:rgba(255,255,255,0.4);">€</span></div>
+        <div class="plan-period"><span class="tax-unit">TTC</span> par mois</div>
         <ul class="plan-list">
           <li>2 interventions mensuelles</li>
           <li>Multi-supports (canapé, matelas, tapis)</li>
@@ -1977,12 +2009,12 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
           <li>Priorité de planning</li>
           <li>Rappel automatique</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-gold" onclick="choisirForfait('Confort — 169€/mois')">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-gold" onclick="choisirForfait('Confort')">Choisir ce forfait</a>
       </div>
       <div class="plan reveal">
         <div class="plan-name">Prestige</div>
-        <div class="plan-price">289<span style="font-size:22px;font-weight:400;color:var(--light);">€</span></div>
-        <div class="plan-period">par mois</div>
+        <div class="plan-price"><span class="px" data-ttc="349">349</span><span style="font-size:22px;font-weight:400;color:var(--light);">€</span></div>
+        <div class="plan-period"><span class="tax-unit">TTC</span> par mois</div>
         <ul class="plan-list">
           <li>Interventions hebdomadaires</li>
           <li>Tous supports sans limite</li>
@@ -1990,7 +2022,7 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
           <li>Garantie intervention sous 24h</li>
           <li>Interlocuteur dédié</li>
         </ul>
-        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Prestige — 289€/mois')">Choisir ce forfait</a>
+        <a href="#contact" class="plan-btn plan-btn-outline" onclick="choisirForfait('Prestige')">Choisir ce forfait</a>
       </div>
     </div>
   </div>
@@ -2004,18 +2036,19 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
         <span class="section-num">Agences immobilières · Meurthe-et-Moselle</span>
         <h2 class="section-title" style="margin-bottom:20px;">Votre prestataire exclusif entre chaque locataire.</h2>
         <p class="agences-desc">Chaque changement de locataire génère une mission. Nous intervenons sous 48h sur Nancy et en Meurthe-et-Moselle pour remettre le bien en état et le rendre immédiatement commercialisable.</p>
+        <div class="tax-toggle" role="group" aria-label="Affichage des prix"><button type="button" data-tax="ttc" aria-pressed="true">Particulier · TTC</button><button type="button" data-tax="ht" aria-pressed="false">Professionnel · HT</button></div>
         <div class="agences-items">
           <div class="agence-row">
             <span class="agence-label">Nettoyage complet appartement vide</span>
-            <span class="agence-price">149 — 290 €</span>
+            <span class="agence-price"><span class="px" data-ht="149">178,80</span> — <span class="px" data-ht="290">348</span> € <span class="tax-unit">TTC</span></span>
           </div>
           <div class="agence-row">
             <span class="agence-label">Cuisine + SDB + vitres + sols</span>
-            <span class="agence-price">229 — 390 €</span>
+            <span class="agence-price"><span class="px" data-ht="229">274,80</span> — <span class="px" data-ht="390">468</span> € <span class="tax-unit">TTC</span></span>
           </div>
           <div class="agence-row">
             <span class="agence-label">Shampooing moquette inclus</span>
-            <span class="agence-price">299 — 490 €</span>
+            <span class="agence-price"><span class="px" data-ht="299">358,80</span> — <span class="px" data-ht="490">588</span> € <span class="tax-unit">TTC</span></span>
           </div>
           <div class="agence-row">
             <span class="agence-label">Tarif dégressif dès 4 missions/mois</span>
@@ -2132,7 +2165,7 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
           </span>
         </button>
         <div class="faq-a">
-          <p>Le nettoyage de canapé par injection-extraction commence à partir de 59 € HT à Nancy et en Meurthe-et-Moselle. Le prix exact dépend de la taille et du type de tissu. Le nettoyage de matelas démarre à partir de 55 € HT. Demandez votre devis gratuit en ligne — réponse garantie sous 24h.</p>
+          <p>Le nettoyage de canapé par injection-extraction commence à partir de <span class="px" data-ttc="69">69</span> € <span class="tax-unit">TTC</span> à Nancy et en Meurthe-et-Moselle. Le prix exact dépend de la taille et du type de tissu. Le nettoyage de matelas démarre à partir de <span class="px" data-ttc="59">59</span> € <span class="tax-unit">TTC</span>. Demandez votre devis gratuit en ligne — réponse garantie sous 24h.</p>
         </div>
       </div>
 
@@ -2496,6 +2529,39 @@ body.modal-open .whatsapp-float, body.modal-open #chat-launcher, body.modal-open
 </footer>
 
 <script>
+// ═══ PRIX TTC / HT ═══
+// Tous les prix sont saisis HT (data-ht). Affichage TTC par défaut (obligatoire pour les particuliers).
+var TVA = 0.20;
+// Particuliers : prix ronds saisis TTC (data-ttc). Pros (agences, bureaux) : prix ronds saisis HT (data-ht).
+var FORFAITS_TTC = { 'Essentiel': 99, 'Confort': 189, 'Prestige': 349 };
+var TAX_MODE = 'ttc';
+try { if (localStorage.getItem('cn_tax') === 'ht') TAX_MODE = 'ht'; } catch (e) {}
+function prixNum(v, base, mode) {
+  base = base || 'ht'; mode = mode || TAX_MODE;
+  if (base !== mode) v = base === 'ht' ? v * (1 + TVA) : v / (1 + TVA);
+  v = Math.round(v * 100) / 100;
+  return v % 1 === 0 ? String(v) : v.toFixed(2).replace('.', ',');
+}
+function taxLabel() { return TAX_MODE === 'ht' ? 'HT' : 'TTC'; }
+function prixTxt(v, base) { return prixNum(v, base) + ' € ' + taxLabel(); }
+function prixRange(a, b, base) { return prixNum(a, base) + ' € à ' + prixNum(b, base) + ' € ' + taxLabel(); }
+function setTaxMode(mode) {
+  TAX_MODE = mode === 'ht' ? 'ht' : 'ttc';
+  try { localStorage.setItem('cn_tax', TAX_MODE); } catch (e) {}
+  document.querySelectorAll('.px').forEach(function (el) {
+    var t = el.getAttribute('data-ttc');
+    el.textContent = t !== null ? prixNum(parseFloat(t), 'ttc') : prixNum(parseFloat(el.getAttribute('data-ht')), 'ht');
+  });
+  document.querySelectorAll('.tax-unit').forEach(function (el) { el.textContent = taxLabel(); });
+  document.querySelectorAll('.tax-toggle button').forEach(function (b) {
+    b.setAttribute('aria-pressed', b.getAttribute('data-tax') === TAX_MODE ? 'true' : 'false');
+  });
+}
+document.querySelectorAll('.tax-toggle button').forEach(function (b) {
+  b.addEventListener('click', function () { setTaxMode(b.getAttribute('data-tax')); });
+});
+setTaxMode(TAX_MODE);
+
 async function sendForm(e) {
   e.preventDefault();
   const btn = document.getElementById('form-btn');
@@ -2597,7 +2663,9 @@ document.addEventListener('click', function(e) {
   });
 })();
 
-function choisirForfait(plan) {
+function choisirForfait(nom) {
+  var ttc = FORFAITS_TTC[nom];
+  var plan = ttc ? nom + ' — ' + ttc + ' € TTC/mois (' + prixNum(ttc, 'ttc', 'ht') + ' € HT/mois)' : nom;
   document.getElementById('forfait-hidden').value = plan;
   document.getElementById('service').value = 'Abonnement résidentiel';
   document.getElementById('forfait-label').textContent = plan;
@@ -3321,7 +3389,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         '✅ Injection-extraction professionnelle<br>' +
         '✅ Canapé, matelas, tapis, moquette, fauteuils<br>' +
         '✅ Résultat visible en une seule intervention<br>' +
-        '💰 À partir de <strong>55 € HT</strong><br><br>' +
+        '💰 À partir de <strong>' + prixTxt(59, 'ttc') + '</strong><br><br>' +
         'Le tarif exact dépend de la taille et du tissu. Devis gratuit sous 24h.',
         [{ l: '📋 Demander un devis', v: 'devis' }, { l: '⏱️ Délais', v: 'delais' }]
       );
@@ -3334,7 +3402,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         '✅ Vitres intérieures et extérieures<br>' +
         '✅ Vérandas, baies vitrées, velux<br>' +
         '✅ Résultat sans traces, produits professionnels<br>' +
-        '💰 À partir de <strong>45 € HT</strong><br><br>' +
+        '💰 À partir de <strong>' + prixTxt(49, 'ttc') + '</strong><br><br>' +
         'Intervention sur Nancy et toute la Lorraine.',
         [{ l: '📋 Demander un devis', v: 'devis' }]
       );
@@ -3346,7 +3414,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         '🚗 <strong>Detailing intérieur de véhicule</strong><br><br>' +
         '✅ Sièges, moquettes, plastiques, vitres<br>' +
         '✅ Voiture restituée comme neuve<br>' +
-        '💰 À partir de <strong>59 € HT</strong><br><br>' +
+        '💰 À partir de <strong>' + prixTxt(65, 'ttc') + '</strong><br><br>' +
         'Service disponible à Nancy et dans l\'agglomération.',
         [{ l: '📋 Demander un devis', v: 'devis' }]
       );
@@ -3373,7 +3441,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         '✅ Cuisine, salle de bain, sols, vitres<br>' +
         '✅ Appartement prêt à remettre en location<br>' +
         '⚡ Intervention sous <strong>48h</strong> sur Nancy<br>' +
-        '💰 De <strong>149 € à 490 € HT</strong> selon la surface',
+        '💰 De <strong>' + prixRange(179, 589, 'ttc') + '</strong> selon la surface',
         [
           { l: '📋 Demander un devis', v: 'devis' },
           { l: '🏢 Je suis une agence', v: 'agences' }
@@ -3388,7 +3456,7 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
         '✅ Nettoyage nocturne récurrent<br>' +
         '✅ Cabinets médicaux, restaurants, commerces, bureaux PME<br>' +
         '✅ Contrat mensuel adapté à votre activité<br>' +
-        '💰 De <strong>200 € à 500 €/mois</strong><br><br>' +
+        '💰 De <strong>' + prixRange(200, 500, 'ht') + '/mois</strong><br><br>' +
         'Zone : Meurthe-et-Moselle et Lorraine.',
         [{ l: '📋 Demander un devis', v: 'devis' }]
       );
@@ -3398,16 +3466,16 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
     if (/abonnement|forfait|mensuel|formule|essentiel|confort|prestige/.test(t) && !/forfait essentiel|forfait confort|forfait prestige/.test(t)) return intentAbonnements();
 
     if (t === 'forfait essentiel') {
-      if (typeof choisirForfait === 'function') choisirForfait('Essentiel — 89€/mois');
-      return chBot('Parfait ! J\'ai pré-sélectionné le forfait <strong>Essentiel (89 €/mois)</strong> dans le formulaire.<br>Remplissez vos coordonnées — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+      if (typeof choisirForfait === 'function') choisirForfait('Essentiel');
+      return chBot('Parfait ! J\'ai pré-sélectionné le forfait <strong>Essentiel (' + prixTxt(99, 'ttc') + '/mois)</strong> dans le formulaire.<br>Remplissez vos coordonnées — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
     }
     if (t === 'forfait confort') {
-      if (typeof choisirForfait === 'function') choisirForfait('Confort — 169€/mois');
-      return chBot('Parfait ! Le forfait <strong>Confort (169 €/mois)</strong> est pré-sélectionné.<br>Accédez au formulaire — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+      if (typeof choisirForfait === 'function') choisirForfait('Confort');
+      return chBot('Parfait ! Le forfait <strong>Confort (' + prixTxt(189, 'ttc') + '/mois)</strong> est pré-sélectionné.<br>Accédez au formulaire — réponse sous 24h.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
     }
     if (t === 'forfait prestige') {
-      if (typeof choisirForfait === 'function') choisirForfait('Prestige — 289€/mois');
-      return chBot('Excellent ! Le forfait <strong>Prestige (289 €/mois)</strong> est pré-sélectionné.<br>Remplissez vos coordonnées dans le formulaire.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
+      if (typeof choisirForfait === 'function') choisirForfait('Prestige');
+      return chBot('Excellent ! Le forfait <strong>Prestige (' + prixTxt(349, 'ttc') + '/mois)</strong> est pré-sélectionné.<br>Remplissez vos coordonnées dans le formulaire.', [{ l: '📝 Accéder au formulaire', v: 'devis' }]);
     }
 
     // ─ AGENCES ─
@@ -3496,11 +3564,11 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   function intentTarifs() {
     chBot(
       '💰 <strong>Nos tarifs principaux</strong><br><br>' +
-      '🛋️ Canapé / matelas — à partir de <strong>55 € HT</strong><br>' +
-      '🪟 Vitres — à partir de <strong>45 € HT</strong><br>' +
-      '🚗 Nettoyage véhicule — à partir de <strong>59 € HT</strong><br>' +
-      '🏠 Remise en état locative — <strong>149 € – 490 € HT</strong><br>' +
-      '🏢 Locaux professionnels — <strong>200 € – 500 €/mois</strong><br>' +
+      '🛋️ Canapé / matelas — à partir de <strong>' + prixTxt(59, 'ttc') + '</strong><br>' +
+      '🪟 Vitres — à partir de <strong>' + prixTxt(49, 'ttc') + '</strong><br>' +
+      '🚗 Nettoyage véhicule — à partir de <strong>' + prixTxt(65, 'ttc') + '</strong><br>' +
+      '🏠 Remise en état locative — <strong>' + prixRange(179, 589, 'ttc') + '</strong><br>' +
+      '🏢 Locaux professionnels — <strong>' + prixRange(200, 500, 'ht') + '/mois</strong><br>' +
       '🔨 Fin de chantier — sur devis (réponse 24h)<br><br>' +
       'Devis gratuit et sans engagement, réponse garantie sous 24h.',
       [
@@ -3524,16 +3592,16 @@ document.getElementById('poles-track').addEventListener('scroll', function() {
   function intentAbonnements() {
     chBot(
       '📅 <strong>Nos 3 forfaits résidentiels</strong><br><br>' +
-      '⭐ <strong>Essentiel — 89 €/mois</strong><br>' +
+      '⭐ <strong>Essentiel — ' + prixTxt(99, 'ttc') + '/mois</strong><br>' +
       '1 intervention • canapé ou matelas • vitres incluses<br><br>' +
-      '🌟 <strong>Confort — 169 €/mois</strong> <em>(le plus populaire)</em><br>' +
+      '🌟 <strong>Confort — ' + prixTxt(189, 'ttc') + '/mois</strong> <em>(le plus populaire)</em><br>' +
       '2 interventions • multi-supports • priorité planning<br><br>' +
-      '💎 <strong>Prestige — 289 €/mois</strong><br>' +
+      '💎 <strong>Prestige — ' + prixTxt(349, 'ttc') + '/mois</strong><br>' +
       'Interventions hebdomadaires • tous supports • interlocuteur dédié • garantie 24h',
       [
-        { l: '⭐ Essentiel 89€', v: 'forfait-essentiel' },
-        { l: '🌟 Confort 169€',  v: 'forfait-confort' },
-        { l: '💎 Prestige 289€', v: 'forfait-prestige' }
+        { l: '⭐ Essentiel ' + prixNum(99, 'ttc') + '€', v: 'forfait-essentiel' },
+        { l: '🌟 Confort ' + prixNum(189, 'ttc') + '€',  v: 'forfait-confort' },
+        { l: '💎 Prestige ' + prixNum(349, 'ttc') + '€', v: 'forfait-prestige' }
       ]
     );
   }
